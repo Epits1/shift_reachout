@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Infobip Shift 2026 Context — PDF</title>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+		}
+
+		:root {
+			--navy: #0B003E;
+			--navy-light: #21174F;
+			--coral: #FF6B6B;
+			--green: #20F3AB;
+		}
+
+		body {
+			background: var(--navy);
+			padding: 20px;
+			color: #333;
+		}
+
+		.container {
+			max-width: 900px;
+			margin: 0 auto;
+		}
+
+		.action-bar {
+			text-align: center;
+			margin-bottom: 30px;
+			background: white;
+			padding: 24px;
+			border-radius: 12px;
+			border: 2px solid var(--coral);
+		}
+
+		button {
+			display: inline-block;
+			padding: 12px 32px;
+			font-size: 16px;
+			font-weight: 700;
+			background: var(--coral);
+			color: var(--navy);
+			border: none;
+			border-radius: 8px;
+			cursor: pointer;
+			transition: all 0.2s;
+			margin: 0 8px;
+		}
+
+		button:hover {
+			background: #FF8888;
+			transform: translateY(-2px);
+		}
+
+		.instruction {
+			font-size: 14px;
+			color: #666;
+			margin-top: 12px;
+		}
+
+		.pdf-content {
+			background: white;
+			padding: 60px;
+			margin-bottom: 20px;
+			box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+			border: 2px solid var(--coral);
+		}
+
+		.page-break {
+			page-break-after: always;
+			margin-bottom: 40px;
+		}
+
+		.header {
+			text-align: center;
+			margin-bottom: 50px;
+			padding-bottom: 30px;
+			border-bottom: 4px solid var(--coral);
+		}
+
+		.header h1 {
+			font-size: 56px;
+			color: var(--coral);
+			font-weight: 900;
+			margin-bottom: 10px;
+			letter-spacing: -1px;
+		}
+
+		.header .subtitle {
+			font-size: 24px;
+			color: var(--navy);
+			font-weight: 500;
+		}
+
+		.header .tagline {
+			font-size: 12px;
+			color: #999;
+			margin-top: 16px;
+			text-transform: uppercase;
+			letter-spacing: 2px;
+			font-weight: 700;
+		}
+
+		h2 {
+			font-size: 28px;
+			color: var(--coral);
+			margin-bottom: 20px;
+			margin-top: 35px;
+			border-left: 4px solid var(--coral);
+			padding-left: 15px;
+			font-weight: 900;
+		}
+
+		h3 {
+			font-size: 16px;
+			color: var(--navy);
+			margin-top: 20px;
+			margin-bottom: 12px;
+			font-weight: 700;
+		}
+
+		p {
+			font-size: 14px;
+			line-height: 1.7;
+			color: #333;
+			margin-bottom: 14px;
+		}
+
+		ul, ol {
+			margin: 12px 0 12px 24px;
+			padding-left: 0;
+		}
+
+		li {
+			font-size: 14px;
+			line-height: 1.7;
+			color: #333;
+			margin-bottom: 6px;
+		}
+
+		.stat-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+			gap: 16px;
+			margin: 28px 0;
+		}
+
+		.stat {
+			background: linear-gradient(135deg, rgba(255, 107, 107, 0.08) 0%, rgba(32, 243, 171, 0.05) 100%);
+			padding: 18px;
+			border-left: 4px solid var(--coral);
+			border-radius: 4px;
+			text-align: center;
+		}
+
+		.stat-number {
+			font-size: 28px;
+			font-weight: 900;
+			color: var(--coral);
+			margin-bottom: 4px;
+		}
+
+		.stat-label {
+			font-size: 11px;
+			color: var(--navy);
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			font-weight: 700;
+		}
+
+		.highlight-box {
+			background: linear-gradient(135deg, rgba(255, 107, 107, 0.06) 0%, rgba(32, 243, 171, 0.04) 100%);
+			border-left: 4px solid var(--green);
+			padding: 18px;
+			margin: 20px 0;
+			border-radius: 4px;
+		}
+
+		.highlight-box p {
+			margin-bottom: 8px;
+		}
+
+		.highlight-box ul {
+			margin-top: 10px;
+		}
+
+		.speaker-item {
+			margin-bottom: 10px;
+			padding-bottom: 10px;
+			border-bottom: 1px solid #e0e0e0;
+		}
+
+		.speaker-item:last-child {
+			border-bottom: none;
+			margin-bottom: 0;
+			padding-bottom: 0;
+		}
+
+		.speaker-item strong {
+			color: var(--navy);
+			display: block;
+			font-weight: 700;
+		}
+
+		.speaker-item .role {
+			color: #666;
+			font-size: 13px;
+			margin-top: 2px;
+		}
+
+		.partner-list {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+			margin: 14px 0;
+		}
+
+		.partner-badge {
+			background: #f0f0f0;
+			padding: 6px 12px;
+			border-radius: 20px;
+			font-size: 12px;
+			color: var(--navy);
+			border: 1px solid #ddd;
+			font-weight: 600;
+		}
+
+		.contact-box {
+			background: linear-gradient(135deg, rgba(255, 107, 107, 0.05) 0%, rgba(32, 243, 171, 0.05) 100%);
+			border: 2px solid var(--coral);
+			padding: 18px;
+			border-radius: 4px;
+			margin-top: 20px;
+		}
+
+		.contact-box p {
+			margin-bottom: 5px;
+			font-size: 14px;
+		}
+
+		.contact-box strong {
+			display: block;
+			font-size: 15px;
+			color: var(--navy);
+			margin-bottom: 8px;
+			font-weight: 700;
+		}
+
+		.checkmark {
+			color: var(--green);
+			font-weight: bold;
+			margin-right: 6px;
+		}
+
+		.section {
+			margin-bottom: 25px;
+		}
+
+		@page {
+			size: A4;
+			margin: 0;
+		}
+
+		@media print {
+			body {
+				background: white;
+				padding: 0;
+			}
+
+			.action-bar {
+				display: none;
+			}
+
+			.pdf-content {
+				margin: 0;
+				padding: 60px;
+				box-shadow: none;
+				border: none;
+				page-break-after: avoid;
+			}
+
+			.page-break {
+				page-break-after: always;
+			}
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="action-bar">
+			<button onclick="window.print()">📥 Download as PDF</button>
+			<button onclick="window.history.back()">← Back</button>
+			<p class="instruction">Click "Download as PDF" to save. Use your browser's print dialog (Cmd+P / Ctrl+P).</p>
+		</div>
+
+		<!-- PAGE 1: Cover & Event Snapshot -->
+		<div class="pdf-content">
+			<div class="header">
+				<h1>INFOBIP SHIFT 2026</h1>
+				<p class="subtitle">Strategic Partnerships</p>
+				<p class="tagline">Build what's next. Together.</p>
+			</div>
+
+			<div class="section">
+				<p style="font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(--navy);">Where Europe's engineering decision-makers meet companies shaping AI, infrastructure, and modern software.</p>
+
+				<h2>Event Snapshot</h2>
+
+				<div class="stat-grid">
+					<div class="stat">
+						<div class="stat-number">4,000+</div>
+						<div class="stat-label">Attendees</div>
+					</div>
+					<div class="stat">
+						<div class="stat-number">80+</div>
+						<div class="stat-label">Curated Sessions</div>
+					</div>
+					<div class="stat">
+						<div class="stat-number">50+</div>
+						<div class="stat-label">Partners</div>
+					</div>
+					<div class="stat">
+						<div class="stat-number">Sept 13-15</div>
+						<div class="stat-label">2026 Dates</div>
+					</div>
+				</div>
+
+				<p>Infobip Shift is a multi-day, high-signal technology event combining deep technical content with a premium destination experience.</p>
+
+				<h3>Notable Previous Speakers</h3>
+				<div>
+					<div class="speaker-item">
+						<strong>Matt Biilmann</strong>
+						<span class="role">CEO, Netlify</span>
+					</div>
+					<div class="speaker-item">
+						<strong>Rasmus Lerdorf</strong>
+						<span class="role">Creator of PHP</span>
+					</div>
+					<div class="speaker-item">
+						<strong>John Romero</strong>
+						<span class="role">Co-creator of DOOM</span>
+					</div>
+					<div class="speaker-item">
+						<strong>Grace Francisco & Senior Engineering Leaders</strong>
+						<span class="role">From major technology companies</span>
+					</div>
+				</div>
+
+				<h3>Previous Partners</h3>
+				<div class="partner-list">
+					<span class="partner-badge">Microsoft</span>
+					<span class="partner-badge">GitHub</span>
+					<span class="partner-badge">Google</span>
+					<span class="partner-badge">Oracle</span>
+					<span class="partner-badge">IBM</span>
+					<span class="partner-badge">Shopify</span>
+					<span class="partner-badge">Docker</span>
+					<span class="partner-badge">GitLab</span>
+					<span class="partner-badge">VMware</span>
+				</div>
+
+				<h3>Media Coverage</h3>
+				<p>TechCrunch, VentureBeat, Mashable, The Economist, Fast Company and other international technology outlets.</p>
+			</div>
+		</div>
+
+		<!-- PAGE 2: What Shift Is & Why Partnership -->
+		<div class="pdf-content page-break">
+			<h2>What Is Infobip Shift?</h2>
+
+			<div class="section">
+				<p><strong>Infobip Shift is not a traditional developer conference.</strong></p>
+
+				<p>It is a <strong>curated platform for engineering leadership and product decision-makers</strong> — where companies building at scale share real challenges, trade-offs, and lessons learned.</p>
+
+				<p>Over the past 15 years, Shift has evolved into a destination where:</p>
+				<ul>
+					<li><strong>CTOs, CIOs, and engineering leaders</strong> shape industry conversations</li>
+					<li><strong>Teams building real systems</strong> share firsthand experience — not theory</li>
+					<li><strong>Companies position themselves as builders,</strong> not commentators</li>
+				</ul>
+
+				<p>Shift sits at the intersection of:</p>
+				<p style="text-align: center; font-weight: 700; color: var(--coral); font-size: 16px; margin: 18px 0;">technical depth × executive audience × real-world application</p>
+			</div>
+
+			<h2>Why Companies Partner</h2>
+
+			<div class="section">
+				<p>Unlike traditional conferences, Infobip Shift serves three distinct strategic purposes:</p>
+
+				<h3><span class="checkmark">✓</span> Employer Branding</h3>
+				<p>Direct access to senior engineers and technical leaders through technical workshops, branded stages, expo activations, and curated networking. Position your company as engineering-driven and build long-term credibility within the developer ecosystem.</p>
+
+				<h3><span class="checkmark">✓</span> Product & Market Positioning</h3>
+				<p>Launch or reinforce products in a high-engagement environment through stage presence, sponsored technical deep dives, livestream branding, and premium expo activations. Enable product storytelling through interaction and authority, not passive visibility.</p>
+
+				<h3><span class="checkmark">✓</span> Client & Executive Engagement</h3>
+				<p>Leverage Infobip Shift as a curated experience platform for your own clients and strategic accounts. The multi-day format and Mediterranean setting allow you to host key clients in an environment blending technical depth, networking, and premium experience.</p>
+			</div>
+		</div>
+
+		<!-- PAGE 3: Experience & Next Steps -->
+		<div class="pdf-content page-break">
+			<h2>Experience & Format</h2>
+
+			<div class="section">
+				<p>Infobip Shift is structured as a <strong>multi-day, in-person technology event</strong> with parallel stages, expo space, and dedicated networking zones in Zadar, Croatia.</p>
+
+				<div class="highlight-box">
+					<strong>For partners, the format enables:</strong>
+					<ul>
+						<li>Multi-day exposure rather than single-session visibility</li>
+						<li>Structured and informal interaction with 4,000+ attendees</li>
+						<li>Client hosting opportunities outside the main program</li>
+						<li>Integration across stages, expo, and networking</li>
+						<li>Extended engagement beyond scheduled talks</li>
+					</ul>
+				</div>
+
+				<h3>The Setting Advantage</h3>
+				<p>The combination of technical content and destination setting consistently results in higher partner dwell time and extended informal engagement compared to single-day conference formats. Zadar's Mediterranean setting creates a premium atmosphere that facilitates deeper relationships.</p>
+
+				<h3>Engagement Formats</h3>
+
+				<p><strong>For Speaker Partners:</strong></p>
+				<ul>
+					<li>Keynote or curated technical talk slots</li>
+					<li>Sponsored technical deep dives</li>
+					<li>Expert roundtables with C-level attendees</li>
+					<li>Thought leadership positioning</li>
+				</ul>
+
+				<p><strong>For Sponsor Partners:</strong></p>
+				<ul>
+					<li>Stage naming rights and program co-creation</li>
+					<li>Premium expo presence with experiential activations</li>
+					<li>Afterparty hosting and executive dinners</li>
+					<li>Invite-only client roundtables</li>
+					<li>VIP networking & hospitality</li>
+					<li>Digital exposure and livestream branding</li>
+				</ul>
+			</div>
+
+			<h2>Next Steps</h2>
+
+			<p>If you're interested in exploring how Infobip Shift 2026 fits into your strategic objectives, we'd love to have a conversation about customized partnership opportunities.</p>
+
+			<div class="contact-box">
+				<strong>Contact Information</strong>
+				<p><strong>Stipe Cigić</strong></p>
+				<p>📧 stipe.cigic@infobip.com</p>
+				<p>📱 +385 98 937 2002</p>
+			</div>
+
+			<p style="margin-top: 40px; padding-top: 20px; border-top: 2px solid #e0e0e0; font-size: 12px; color: #999;">
+				Infobip Shift 2026 | Strategic Partnerships Context | September 13-15, 2026 | Zadar, Croatia
+			</p>
+		</div>
+	</div>
+</body>
+</html>
