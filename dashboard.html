@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Infobip Shift 2026 — Outreach Dashboard</title>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+	<script src="https://cdn.tailwindcss.com"></script>
+	<style>
+		:root {
+			--navy: #0B003E;
+			--navy-light: #21174F;
+			--navy-interaction: #2C3970;
+			--coral: #FF6B6B;
+			--coral-interaction: #FF8888;
+			--coral-light: #F5B6B6;
+			--green: #20F3AB;
+			--green-interaction: #A6FADD;
+		}
+
+		* {
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+		}
+
+		html { scroll-behavior: smooth; }
+
+		body {
+			background: var(--navy);
+			color: #fff;
+		}
+
+		.accent-chip {
+			background: var(--coral);
+			color: var(--navy);
+			font-weight: 700;
+			letter-spacing: 0.05em;
+			display: inline-block;
+		}
+
+		.sticky-nav-blur {
+			backdrop-filter: blur(8px);
+			background: rgba(11, 0, 62, 0.92);
+			border-bottom: 2px solid var(--coral);
+		}
+
+		.progress-bar-container {
+			background: rgba(255, 107, 107, 0.1);
+			border-radius: 12px;
+			height: 14px;
+			overflow: hidden;
+			border: 1px solid var(--coral);
+		}
+
+		.progress-bar-fill {
+			height: 100%;
+			background: linear-gradient(90deg, var(--coral) 0%, var(--green) 100%);
+			transition: width 0.6s ease-in-out;
+			border-radius: 12px;
+			box-shadow: 0 0 12px rgba(255, 107, 107, 0.5);
+		}
+
+		.status-badge {
+			display: inline-block;
+			padding: 0.35rem 0.85rem;
+			border-radius: 9999px;
+			font-size: 0.8rem;
+			font-weight: 600;
+		}
+
+		.status-not-started {
+			background: rgba(255, 255, 255, 0.1);
+			color: rgba(255, 255, 255, 0.6);
+		}
+
+		.status-in-progress {
+			background: rgba(255, 107, 107, 0.2);
+			color: var(--coral-interaction);
+		}
+
+		.status-interested {
+			background: rgba(32, 243, 171, 0.2);
+			color: var(--green-interaction);
+		}
+
+		.status-confirmed {
+			background: rgba(32, 243, 171, 0.3);
+			color: var(--green);
+			font-weight: 700;
+		}
+
+		.template-card {
+			border-left: 4px solid var(--coral);
+			background: var(--navy-light);
+			border-radius: 12px;
+		}
+
+		.copy-btn {
+			background: var(--coral);
+			color: var(--navy);
+			padding: 0.65rem 1.25rem;
+			border: none;
+			border-radius: 8px;
+			cursor: pointer;
+			font-weight: 700;
+			transition: all 0.2s;
+		}
+
+		.copy-btn:hover {
+			background: var(--coral-interaction);
+			transform: translateY(-2px);
+		}
+
+		.copy-btn.copied {
+			background: var(--green);
+		}
+
+		table {
+			border-collapse: collapse;
+			width: 100%;
+		}
+
+		table th {
+			background: var(--navy-light);
+			padding: 1rem;
+			text-align: left;
+			font-weight: 700;
+			color: var(--coral);
+			border-bottom: 2px solid var(--coral);
+			font-size: 0.9rem;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+		}
+
+		table td {
+			padding: 0.9rem 1rem;
+			border-bottom: 1px solid var(--navy-interaction);
+			color: rgba(255, 255, 255, 0.9);
+		}
+
+		table tbody tr:hover {
+			background: var(--navy-light);
+		}
+
+		.hero-gradient {
+			background: linear-gradient(135deg, var(--navy-interaction) 0%, var(--navy-light) 100%);
+			border: 2px solid var(--coral);
+			border-radius: 16px;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.hero-gradient::before {
+			content: '';
+			position: absolute;
+			width: 300px;
+			height: 300px;
+			background: var(--coral);
+			border-radius: 50%;
+			opacity: 0.08;
+			top: -50px;
+			right: -50px;
+		}
+
+		.card {
+			background: var(--navy-light);
+			border-left: 4px solid var(--coral);
+			border-radius: 12px;
+			padding: 1.75rem;
+		}
+
+		.card h3 {
+			color: var(--coral);
+			font-size: 1.25rem;
+			font-weight: 700;
+			margin-bottom: 0.75rem;
+		}
+
+		.card p {
+			color: rgba(255, 255, 255, 0.85);
+			font-size: 0.95rem;
+			line-height: 1.6;
+		}
+
+		.stat-box {
+			background: var(--navy-light);
+			padding: 1.75rem;
+			border-radius: 12px;
+			border: 2px solid var(--coral);
+			border-top: 4px solid var(--coral);
+			text-align: center;
+			position: relative;
+			transition: all 0.3s ease;
+		}
+
+		.stat-box:hover {
+			transform: translateY(-6px);
+			box-shadow: 0 12px 32px rgba(255, 107, 107, 0.25);
+		}
+
+		.stat-number {
+			font-size: 2.5rem;
+			color: var(--coral);
+			font-weight: 900;
+			margin-bottom: 0.5rem;
+		}
+
+		.stat-label {
+			font-size: 0.85rem;
+			color: rgba(255, 255, 255, 0.7);
+			font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+		}
+
+		section h2 {
+			font-size: 2.25rem;
+			color: var(--coral);
+			margin-bottom: 1.5rem;
+			font-weight: 900;
+		}
+
+		.feature-box {
+			background: linear-gradient(135deg, var(--coral) 0%, var(--coral-interaction) 100%);
+			padding: 2rem;
+			border-radius: 12px;
+			color: var(--navy);
+		}
+
+		.feature-box h3 {
+			font-size: 1.5rem;
+			font-weight: 900;
+			margin-bottom: 1rem;
+		}
+
+		.feature-box p {
+			font-size: 1rem;
+			line-height: 1.6;
+		}
+
+		.highlight-box {
+			background: var(--navy-interaction);
+			border-left: 4px solid var(--green);
+			padding: 1.75rem;
+			margin: 1.5rem 0;
+			border-radius: 8px;
+		}
+
+		.highlight-box p {
+			color: rgba(255, 255, 255, 0.9);
+		}
+
+		.highlight-box ul {
+			margin: 1rem 0 0 1.5rem;
+			padding-left: 0;
+		}
+
+		.highlight-box li {
+			color: rgba(255, 255, 255, 0.9);
+			margin-bottom: 0.5rem;
+		}
+
+		a {
+			color: var(--green);
+			text-decoration: none;
+			font-weight: 600;
+		}
+
+		a:hover {
+			color: var(--green-interaction);
+		}
+
+		@media (max-width: 768px) {
+			section h2 {
+				font-size: 1.75rem;
+			}
+		}
+
+		/* Accent Decorations */
+		.accent-dot {
+			position: absolute;
+			border-radius: 50%;
+			opacity: 0.1;
+		}
+
+		.accent-line {
+			position: absolute;
+			background: linear-gradient(90deg, var(--coral) 0%, transparent 100%);
+			height: 2px;
+		}
+
+		/* Enhanced Card Styling */
+		.card {
+			position: relative;
+			overflow: hidden;
+			transition: all 0.3s ease;
+		}
+
+		.card::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 3px;
+			background: linear-gradient(90deg, var(--coral) 0%, var(--green) 100%);
+		}
+
+		.card:hover {
+			transform: translateY(-4px);
+			box-shadow: 0 12px 24px rgba(255, 107, 107, 0.2);
+			border-color: var(--green);
+		}
+
+		/* Stat Box Enhancement */
+		.stat-box {
+			position: relative;
+			overflow: hidden;
+		}
+
+		.stat-box::after {
+			content: '';
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			width: 100px;
+			height: 100px;
+			background: radial-gradient(circle, var(--coral) 0%, transparent 70%);
+			opacity: 0.08;
+			border-radius: 50%;
+		}
+
+		/* Template Card Glow Effect */
+		.template-card {
+			position: relative;
+			transition: all 0.3s ease;
+		}
+
+		.template-card:hover {
+			box-shadow: 0 0 24px rgba(255, 107, 107, 0.3);
+			border-left-color: var(--green);
+		}
+
+		/* Animated underline on section headers */
+		section h2 {
+			position: relative;
+			display: inline-block;
+		}
+
+		section h2::after {
+			content: '';
+			position: absolute;
+			bottom: -10px;
+			left: 0;
+			width: 60px;
+			height: 3px;
+			background: linear-gradient(90deg, var(--green) 0%, var(--coral) 100%);
+			border-radius: 2px;
+		}
+
+		/* Feature box gradient enhancement */
+		.feature-box {
+			position: relative;
+			overflow: hidden;
+		}
+
+		.feature-box::before {
+			content: '';
+			position: absolute;
+			top: -50%;
+			right: -50%;
+			width: 200px;
+			height: 200px;
+			background: rgba(255, 255, 255, 0.05);
+			border-radius: 50%;
+		}
+
+		.feature-box {
+			z-index: 1;
+		}
+
+		.feature-box > * {
+			position: relative;
+			z-index: 2;
+		}
+
+		/* Button glow on hover */
+		.copy-btn {
+			position: relative;
+			overflow: hidden;
+		}
+
+		.copy-btn::before {
+			content: '';
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			width: 0;
+			height: 0;
+			background: rgba(255, 255, 255, 0.2);
+			border-radius: 50%;
+			transform: translate(-50%, -50%);
+			transition: width 0.6s, height 0.6s;
+		}
+
+		.copy-btn:hover::before {
+			width: 300px;
+			height: 300px;
+		}
+
+		.copy-btn {
+			z-index: 1;
+		}
+
+		.copy-btn span {
+			position: relative;
+			z-index: 2;
+		}
+
+		/* Gradient divider */
+		hr {
+			background: linear-gradient(90deg, transparent 0%, var(--coral) 50%, transparent 100%) !important;
+		}
+
+		/* Highlight box enhanced */
+		.highlight-box {
+			position: relative;
+			border-top: 2px solid var(--green);
+			border-bottom: 2px solid var(--green);
+			background: linear-gradient(135deg, rgba(32, 243, 171, 0.08) 0%, rgba(255, 107, 107, 0.04) 100%);
+		}
+
+		/* Progress bar animation */
+		.progress-bar-fill {
+			animation: shimmer 2s infinite;
+		}
+
+		@keyframes shimmer {
+			0%, 100% {
+				box-shadow: 0 0 12px rgba(255, 107, 107, 0.5);
+			}
+			50% {
+				box-shadow: 0 0 24px rgba(32, 243, 171, 0.6);
+			}
+		}
+
+		/* Floating accent circles in background */
+		.hero-gradient::after {
+			content: '';
+			position: absolute;
+			bottom: -100px;
+			left: -100px;
+			width: 300px;
+			height: 300px;
+			background: var(--green);
+			border-radius: 50%;
+			opacity: 0.05;
+		}
+
+		/* Text gradient for emphasis */
+		.text-gradient {
+			background: linear-gradient(135deg, var(--coral) 0%, var(--green) 100%);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			background-clip: text;
+			font-weight: 900;
+		}
+
+		@media print {
+			.print-hidden {
+				display: none;
+			}
+		}
+	</style>
+</head>
+<body class="bg-navy text-white">
+	<!-- Sticky Top Navigation -->
+	<nav class="sticky top-0 z-40 sticky-nav-blur shadow-lg" style="backdrop-filter: blur(10px);">
+		<div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+			<div class="text-2xl font-black tracking-tight" style="color: var(--coral);">INFOBIP SHIFT</div>
+			<ul class="hidden md:flex flex-wrap gap-8 text-sm font-semibold">
+				<li><a href="#overview" class="text-gray-300 hover:text-coral nav-link">Overview</a></li>
+				<li><a href="#progress" class="text-gray-300 hover:text-coral nav-link">Progress</a></li>
+				<li><a href="#companies" class="text-gray-300 hover:text-coral nav-link">Companies</a></li>
+				<li><a href="#templates" class="text-gray-300 hover:text-coral nav-link">Templates</a></li>
+				<li><a href="#context" class="text-gray-300 hover:text-coral nav-link">Context</a></li>
+			</ul>
+		</div>
+	</nav>
+
+	<main class="max-w-7xl mx-auto px-6 py-16">
+		<!-- Hero Section -->
+		<section class="hero-gradient rounded-2xl p-16 mb-16">
+			<div class="relative z-10">
+				<h1 class="text-5xl md:text-6xl font-black mb-6" style="color: var(--coral);">Infobip Shift 2026</h1>
+				<p class="text-xl md:text-2xl text-gray-300 mb-4">Strategic Outreach Dashboard</p>
+				<p class="text-lg text-gray-400">Reach out to potential speakers and sponsors with structured templates and live engagement tracking.</p>
+			</div>
+		</section>
+
+		<!-- Quick Stats -->
+		<section id="overview" class="mb-20 scroll-mt-24">
+			<div class="mb-8">
+				<h2>Event Overview</h2>
+			</div>
+			<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+				<div class="stat-box" style="border-top-color: var(--coral);">
+					<div class="stat-number" style="color: var(--coral);">4,000+</div>
+					<div class="stat-label">In-Person Attendees</div>
+				</div>
+				<div class="stat-box" style="border-top-color: var(--green);">
+					<div class="stat-number" style="color: var(--green);">September 13-15</div>
+					<div class="stat-label">Conference Dates</div>
+				</div>
+				<div class="stat-box" style="border-top-color: var(--coral);">
+					<div class="stat-number" style="color: var(--coral);">80+</div>
+					<div class="stat-label">Speaking Slots</div>
+				</div>
+				<div class="stat-box" style="border-top-color: var(--green);">
+					<div class="stat-number" style="color: var(--green);">Zadar, Croatia</div>
+					<div class="stat-label">Location</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Progress Overview -->
+		<section id="progress" class="mb-20 scroll-mt-24">
+			<h2>Outreach Progress</h2>
+
+			<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+				<div class="card">
+					<p class="text-gray-400 text-sm mb-2">Total Companies</p>
+					<div class="text-4xl font-black" style="color: var(--coral);" id="total-companies">0</div>
+				</div>
+				<div class="card">
+					<p class="text-gray-400 text-sm mb-2">Confirmed</p>
+					<div class="text-4xl font-black" style="color: var(--green);" id="confirmed-count">0</div>
+				</div>
+				<div class="card">
+					<p class="text-gray-400 text-sm mb-2">Interested</p>
+					<div class="text-4xl font-black" style="color: var(--green-interaction);" id="interested-count">0</div>
+				</div>
+				<div class="card">
+					<p class="text-gray-400 text-sm mb-2">Not Started</p>
+					<div class="text-4xl font-black" style="color: var(--coral-light);" id="not-started-count">0</div>
+				</div>
+			</div>
+
+			<div class="card">
+				<h3>Overall Completion</h3>
+				<div class="mt-6">
+					<div class="flex justify-between mb-3">
+						<span class="font-semibold">Progress</span>
+						<span class="text-sm text-gray-400"><span id="progress-percent">0</span>%</span>
+					</div>
+					<div class="progress-bar-container">
+						<div class="progress-bar-fill" id="progress-fill" style="width: 0%"></div>
+					</div>
+				</div>
+
+				<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-8">
+					<div>
+						<p class="text-xs text-gray-400 mb-2 font-semibold">NOT STARTED</p>
+						<p class="text-3xl font-black text-coral-light" id="bar-not-started">0</p>
+						<div class="text-xs text-gray-500 mt-1"><span id="percent-not-started">0</span>%</div>
+					</div>
+					<div>
+						<p class="text-xs text-gray-400 mb-2 font-semibold">IN PROGRESS</p>
+						<p class="text-3xl font-black" style="color: var(--coral);" id="bar-in-progress">0</p>
+						<div class="text-xs text-gray-500 mt-1"><span id="percent-in-progress">0</span>%</div>
+					</div>
+					<div>
+						<p class="text-xs text-gray-400 mb-2 font-semibold">INTERESTED</p>
+						<p class="text-3xl font-black" style="color: var(--green-interaction);" id="bar-interested">0</p>
+						<div class="text-xs text-gray-500 mt-1"><span id="percent-interested">0</span>%</div>
+					</div>
+					<div>
+						<p class="text-xs text-gray-400 mb-2 font-semibold">CONFIRMED</p>
+						<p class="text-3xl font-black" style="color: var(--green);" id="bar-confirmed">0</p>
+						<div class="text-xs text-gray-500 mt-1"><span id="percent-confirmed">0</span>%</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Live Company Tracking -->
+		<section id="companies" class="mb-20 scroll-mt-24">
+			<h2>Live Company Tracking</h2>
+			<p class="text-gray-400 mb-8">Open the tracking spreadsheet to view and manage outreach status in real-time:</p>
+
+			<div class="card mb-8 text-center">
+				<a href="https://infobip-my.sharepoint.com/:x:/p/scigic/IQDJaB34jXrvTIsWdULGIxrOAUiqNYDwOhQn35QJJXEh5xU?e=cn3VRq" target="_blank" class="inline-block px-10 py-4 rounded-lg font-bold transition" style="background: var(--coral); color: var(--navy); font-size: 1.1rem;">📊 Open Tracking Spreadsheet</a>
+			</div>
+
+			<div class="bg-navy-interaction border-l-4 rounded-xl p-8" style="border-color: var(--green);">
+				<h3 style="color: var(--green);">Spreadsheet Columns</h3>
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+					<div>
+						<p class="font-semibold text-coral mb-3">Company Information</p>
+						<ul class="text-gray-300 text-sm space-y-2">
+							<li>• Company</li>
+							<li>• Category</li>
+							<li>• Target Role</li>
+							<li>• Target Person (if known)</li>
+						</ul>
+					</div>
+					<div>
+						<p class="font-semibold text-coral mb-3">Outreach Tracking</p>
+						<ul class="text-gray-300 text-sm space-y-2">
+							<li>• Contact Status (Not Started / In Progress / Interested / Confirmed)</li>
+							<li>• Response</li>
+							<li>• IB Contact/Department</li>
+							<li>• Notes</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<p class="text-gray-500 text-sm mt-8">💡 The spreadsheet updates automatically. Changes made there sync to this dashboard. No file downloads needed.</p>
+		</section>
+
+		<!-- Outreach Templates -->
+		<section id="templates" class="mb-20 scroll-mt-24">
+			<h2>Outreach Templates</h2>
+			<p class="text-gray-400 mb-10">Copy and personalize these templates for reaching out to potential speakers and sponsors.</p>
+
+			<!-- Speaker Template -->
+			<div class="mb-12">
+				<h3 class="text-2xl font-bold mb-6" style="color: var(--coral);">Speaker Invitation</h3>
+				<div class="template-card p-8 space-y-6">
+					<div>
+						<p class="text-sm font-bold text-gray-400 mb-3">SUBJECT LINE</p>
+						<p class="text-base bg-navy-interaction p-4 rounded-lg border border-coral-light font-mono text-sm">
+							Speaking at Infobip Shift 2026 — Europe's Most Curated Tech Conference
+						</p>
+					</div>
+
+					<div>
+						<p class="text-sm font-bold text-gray-400 mb-3">EMAIL BODY</p>
+						<div class="bg-navy-interaction p-6 rounded-lg border border-coral-light text-sm leading-relaxed space-y-3 font-mono whitespace-pre-wrap text-gray-300" id="speaker-template">Hi [NAME],
+
+I hope you're doing well.
+
+I'm reaching out as we're currently shaping the speaker lineup for Infobip Shift 2026, and [COMPANY NAME] is very much on our radar given your work in [DOMAIN / SPECIFIC AREA].
+
+Shift is a curated technology conference that brings together 4,000+ senior engineering leaders, CTOs, and decision-makers from across Europe — with a strong focus on real-world technical challenges and applied AI.
+
+We're not looking for generic talks, but for companies that are actively building and scaling — sharing firsthand experiences, lessons learned, and perspectives that can genuinely move the industry forward.
+
+With that in mind, I'd love to explore whether:
+• you would personally be interested in contributing, or
+• you might recommend someone from your team who is deeply involved in [RELEVANT AREA / TOPIC]
+
+The event takes place in Zadar, Croatia (September 13–15, 2026), in a multi-day format designed for meaningful interaction — not just stage time.
+
+Happy to share more context if helpful — would you be open to a short call?
+
+Best regards,
+[YOUR NAME]
+[YOUR EMAIL]
+[YOUR PHONE]</div>
+					</div>
+
+					<button class="copy-btn" onclick="copyTemplate('speaker-template', this)">📋 Copy Template</button>
+				</div>
+			</div>
+
+			<!-- Sponsor Template -->
+			<div class="mb-12">
+				<h3 class="text-2xl font-bold mb-6" style="color: var(--coral);">Sponsor / Partner Invitation</h3>
+				<div class="template-card p-8 space-y-6">
+					<div>
+						<p class="text-sm font-bold text-gray-400 mb-3">SUBJECT LINE</p>
+						<p class="text-base bg-navy-interaction p-4 rounded-lg border border-coral-light font-mono text-sm">
+							Partnership Opportunity: Infobip Shift 2026 — Your Platform for Enterprise Tech Leaders
+						</p>
+					</div>
+
+					<div>
+						<p class="text-sm font-bold text-gray-400 mb-3">EMAIL BODY</p>
+						<div class="bg-navy-interaction p-6 rounded-lg border border-coral-light text-sm leading-relaxed space-y-3 font-mono whitespace-pre-wrap text-gray-300" id="sponsor-template">Hi [NAME],
+
+I wanted to reach out as we're currently shaping a select group of partners for Infobip Shift 2026, and [COMPANY NAME] is a natural fit given your position in [DOMAIN / MARKET].
+
+Shift has evolved into a platform where 4,000+ senior engineering leaders, CTOs, and decision-makers come together — not just to attend, but to engage with companies that are actively shaping how technology is built and scaled.
+
+For us, partnership is not about visibility alone, but about positioning — being part of the conversations that matter, alongside a carefully curated group of companies.
+
+We typically work closely with partners to define how they show up — whether through technical content, executive presence, or more tailored formats aligned with their priorities.
+
+I'd be interested to explore whether this is something that could make sense for your 2026 plans.
+
+Would you be open to a short conversation?
+
+Best regards,
+[YOUR NAME]
+[YOUR EMAIL]
+[YOUR PHONE]</div>
+					</div>
+
+					<button class="copy-btn" onclick="copyTemplate('sponsor-template', this)">📋 Copy Template</button>
+				</div>
+			</div>
+
+			<!-- Follow-Up Template -->
+			<div class="mb-12">
+				<h3 class="text-2xl font-bold mb-6" style="color: var(--coral);">Follow-Up (No Response)</h3>
+				<div class="template-card p-8 space-y-6">
+					<div>
+						<p class="text-sm font-bold text-gray-400 mb-3">SUBJECT LINE</p>
+						<p class="text-base bg-navy-interaction p-4 rounded-lg border border-coral-light font-mono text-sm">
+							Quick follow-up: Infobip Shift 2026 speaking opportunity
+						</p>
+					</div>
+
+					<div>
+						<p class="text-sm font-bold text-gray-400 mb-3">EMAIL BODY</p>
+						<div class="bg-navy-interaction p-6 rounded-lg border border-coral-light text-sm leading-relaxed space-y-3 font-mono whitespace-pre-wrap text-gray-300" id="followup-template">Hi [NAME],
+
+Following up on my previous message about Infobip Shift 2026. I know inboxes get busy, so wanted to resurface this.
+
+If you're interested in exploring this further, I'd love to grab 15 minutes to discuss what's possible. If this isn't the right timing, I completely understand — but wanted to make sure it didn't slip through the cracks.
+
+Either way, happy to send over more context about the conference if that's helpful.
+
+Looking forward to connecting.
+
+Best,
+[YOUR NAME]</div>
+					</div>
+
+					<button class="copy-btn" onclick="copyTemplate('followup-template', this)">📋 Copy Template</button>
+				</div>
+			</div>
+		</section>
+
+		<!-- Context Section -->
+		<section id="context" class="mb-20 scroll-mt-24">
+			<h2>Infobip Shift Context</h2>
+
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+				<div class="feature-box">
+					<h3>Internal Context</h3>
+					<p>Full strategic context for internal use when reaching out to Infobip teams and identifying potential partners.</p>
+				</div>
+
+				<div class="feature-box">
+					<h3>For Prospects</h3>
+					<p>Download a polished PDF context document to share with potential speakers and sponsors.</p>
+				</div>
+			</div>
+
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+				<a href="#internal-context-content" class="card text-center hover:border-green transition">
+					<h3 style="color: var(--green);">📄 View Internal Context</h3>
+					<p>Strategic positioning, brand overview, and key messages for your team</p>
+				</a>
+
+				<a href="context-pdf-generator.html?t=" onclick="this.href+= new Date().getTime();" target="_blank" class="card text-center hover:border-green transition">
+					<h3 style="color: var(--green);">📥 Generate Context PDF</h3>
+					<p>Polished 3-page PDF to share with prospects and partners</p>
+				</a>
+			</div>
+		</section>
+
+		<!-- Internal Context (Hidden unless scrolled to) -->
+		<section id="internal-context-content" class="mb-20 scroll-mt-24 bg-navy-light border-l-4 rounded-xl p-12" style="border-color: var(--green);">
+			<h2 style="color: var(--green);">Infobip Shift 2026 — Strategic Context</h2>
+
+			<div class="space-y-12">
+				<div>
+					<h3 class="text-xl font-bold mb-6" style="color: var(--coral);">Event Snapshot</h3>
+					<div class="space-y-4">
+						<div>
+							<p class="font-semibold text-lg mb-3">Conference Details</p>
+							<ul class="list-disc list-inside space-y-2 text-gray-300">
+								<li>4,000+ in-person attendees</li>
+								<li>80+ curated speaking sessions</li>
+								<li>50+ partner companies</li>
+								<li>September 13-15, 2026</li>
+								<li>Zadar, Croatia (15,000 m² transformed venue)</li>
+								<li>600+ companies represented</li>
+							</ul>
+						</div>
+
+						<div class="mt-6">
+							<p class="font-semibold text-lg mb-3">Notable Previous Speakers</p>
+							<ul class="list-disc list-inside space-y-2 text-gray-300">
+								<li>Matt Biilmann (CEO, Netlify)</li>
+								<li>Rasmus Lerdorf (Creator of PHP)</li>
+								<li>John Romero (Co-creator of DOOM)</li>
+								<li>Grace Francisco & Senior engineering leaders from major tech companies</li>
+							</ul>
+						</div>
+
+						<div class="mt-6">
+							<p class="font-semibold text-lg mb-3">Previous Partners</p>
+							<p class="text-gray-300">Microsoft, Google, GitHub, Oracle, IBM, Shopify, Docker, GitLab, VMware, and other international technology companies.</p>
+						</div>
+
+						<div class="mt-6">
+							<p class="font-semibold text-lg mb-3">Media Coverage</p>
+							<p class="text-gray-300">TechCrunch, VentureBeat, Mashable, The Economist, Fast Company and other international technology outlets.</p>
+						</div>
+					</div>
+				</div>
+
+				<hr style="border-color: var(--coral); opacity: 0.2;">
+
+				<div>
+					<h3 class="text-xl font-bold mb-6" style="color: var(--coral);">Strategic Positioning</h3>
+					<p class="text-gray-300 mb-4">Infobip Shift is Infobip's strategic credibility platform in the global technology ecosystem — not just a conference, but a brand and relationship accelerator.</p>
+					<p class="text-gray-300 mb-4">It has evolved from a developer conference into a destination where:</p>
+					<ul class="list-disc list-inside space-y-2 text-gray-300">
+						<li>Senior engineering and technology leadership gather on real challenges</li>
+						<li>CTOs, CIOs, and heads of engineering from global companies influence conversations</li>
+						<li>Companies actively shaping technology (not just following trends) position themselves as innovators</li>
+					</ul>
+				</div>
+
+				<hr style="border-color: var(--coral); opacity: 0.2;">
+
+				<div>
+					<h3 class="text-xl font-bold mb-6" style="color: var(--coral);">Why Companies Partner</h3>
+
+					<h4 class="font-bold text-lg mb-4" style="color: var(--green);">✓ Employer Branding</h4>
+					<p class="text-gray-300 mb-6">Direct access to senior engineers and technical leaders. Companies position themselves as engineering-driven and build long-term credibility within the developer ecosystem.</p>
+
+					<h4 class="font-bold text-lg mb-4" style="color: var(--green);">✓ Product & Market Positioning</h4>
+					<p class="text-gray-300 mb-6">Launch or reinforce products through stage presence, sponsored technical deep dives, livestream branding, and premium expo activations. Product storytelling through interaction and authority, not passive visibility.</p>
+
+					<h4 class="font-bold text-lg mb-4" style="color: var(--green);">✓ Client & Executive Engagement</h4>
+					<p class="text-gray-300">Leverage Shift as a curated experience platform for your own clients and strategic accounts. The multi-day format and Mediterranean setting enable deeper relationships.</p>
+				</div>
+
+				<hr style="border-color: var(--coral); opacity: 0.2;">
+
+				<div>
+					<h3 class="text-xl font-bold mb-6" style="color: var(--coral);">Experience & Format</h3>
+					<p class="text-gray-300 mb-4">Multi-day, in-person technology event with parallel stages, expo space, and networking zones. The setting and multi-day structure result in higher engagement and extended informal connection.</p>
+
+					<div class="highlight-box mt-6">
+						<strong>For partners:</strong>
+						<ul class="mt-4">
+							<li>✓ Multi-day exposure vs. single-session visibility</li>
+							<li>✓ Structured and informal interaction with attendees</li>
+							<li>✓ Client hosting opportunities outside the main program</li>
+							<li>✓ Integration across stages, expo, and networking</li>
+							<li>✓ Extended engagement beyond scheduled talks</li>
+						</ul>
+					</div>
+				</div>
+
+				<hr style="border-color: var(--coral); opacity: 0.2;">
+
+				<div class="bg-navy-interaction rounded-lg p-6 border-l-4" style="border-color: var(--green);">
+					<h4 class="font-bold text-lg mb-4" style="color: var(--coral);">Contact for Partnerships</h4>
+					<p class="font-bold mb-2">Stipe Cigić</p>
+					<p class="text-gray-400 mb-1">📧 <a href="mailto:stipe.cigic@infobip.com">stipe.cigic@infobip.com</a></p>
+					<p class="text-gray-400">📱 +385 98 937 2002</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Excel Resource -->
+		<section class="border-t-2 pt-16" style="border-color: var(--coral);">
+			<h2>Excel Tracking File</h2>
+			<p class="text-gray-400 mb-8">Access the master tracking spreadsheet online to manage company data in real-time:</p>
+			<a href="https://infobip-my.sharepoint.com/:x:/p/scigic/IQDJaB34jXrvTIsWdULGIxrOAUiqNYDwOhQn35QJJXEh5xU?e=cn3VRq" target="_blank" class="inline-block px-8 py-4 rounded-lg font-bold transition" style="background: var(--coral); color: var(--navy);">📊 Open Excel Online</a>
+			<p class="text-gray-500 text-sm mt-6">💡 The live table above and this spreadsheet are synced. Update either location and both reflect the changes in real-time.</p>
+		</section>
+	</main>
+
+	<footer class="border-t-2 mt-20 py-10" style="border-color: var(--coral);">
+		<div class="max-w-7xl mx-auto px-6 text-center text-gray-500 text-sm">
+			<p>Infobip Shift 2026 Outreach Dashboard</p>
+			<p class="mt-2">September 13-15, 2026 | Zadar, Croatia</p>
+		</div>
+	</footer>
+
+	<script>
+		let companiesData = [];
+
+		function updateDashboard() {
+			const total = companiesData.length;
+			const notStarted = companiesData.filter(c => c.contactStatus === 'Not Started').length;
+			const inProgress = companiesData.filter(c => c.contactStatus === 'In Progress').length;
+			const interested = companiesData.filter(c => c.contactStatus === 'Interested').length;
+			const confirmed = companiesData.filter(c => c.contactStatus === 'Confirmed').length;
+
+			const completionRate = total > 0 ? ((inProgress + interested + confirmed) / total) * 100 : 0;
+
+			document.getElementById('total-companies').textContent = total;
+			document.getElementById('not-started-count').textContent = notStarted;
+			document.getElementById('in-progress-count').textContent = inProgress;
+			document.getElementById('interested-count').textContent = interested;
+			document.getElementById('confirmed-count').textContent = confirmed;
+
+			document.getElementById('progress-fill').style.width = completionRate + '%';
+			document.getElementById('progress-percent').textContent = Math.round(completionRate);
+
+			document.getElementById('bar-not-started').textContent = notStarted;
+			document.getElementById('bar-in-progress').textContent = inProgress;
+			document.getElementById('bar-interested').textContent = interested;
+			document.getElementById('bar-confirmed').textContent = confirmed;
+
+			document.getElementById('percent-not-started').textContent = total > 0 ? Math.round((notStarted / total) * 100) : 0;
+			document.getElementById('percent-in-progress').textContent = total > 0 ? Math.round((inProgress / total) * 100) : 0;
+			document.getElementById('percent-interested').textContent = total > 0 ? Math.round((interested / total) * 100) : 0;
+			document.getElementById('percent-confirmed').textContent = total > 0 ? Math.round((confirmed / total) * 100) : 0;
+		}
+
+		function copyTemplate(elementId, button) {
+			const template = document.getElementById(elementId).textContent;
+			navigator.clipboard.writeText(template).then(() => {
+				const originalText = button.textContent;
+				button.textContent = '✓ Copied!';
+				setTimeout(() => {
+					button.textContent = originalText;
+				}, 2000);
+			});
+		}
+
+		updateDashboard();
+	</script>
+</body>
+</html>
